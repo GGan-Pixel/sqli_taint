@@ -1,0 +1,121 @@
+# Default configuration for sqli-taint
+
+[sinks]
+[[sinks.calls]]
+name = "execute"
+receivers = []
+arg_index = 0
+kwarg_names = ["query", "sql"]
+
+[[sinks.calls]]
+name = "executemany"
+receivers = []
+arg_index = 0
+kwarg_names = ["query", "sql"]
+
+[[sinks.calls]]
+name = "executescript"
+receivers = []
+arg_index = 0
+kwarg_names = ["sql_script", "script", "sql"]
+
+[[sinks.calls]]
+name = "raw"
+receivers = []
+arg_index = 0
+kwarg_names = ["raw_query"]
+
+[[sinks.calls]]
+name = "extra"
+receivers = []
+arg_index = -1
+kwarg_names = ["select", "where", "tables"]
+
+[[sinks.calls]]
+name = "text"
+receivers = ["sqlalchemy", "sa"]
+arg_index = 0
+kwarg_names = ["text"]
+allow_bare_call = true
+
+[[sinks.calls]]
+name = "read_sql"
+receivers = ["pandas", "pd"]
+arg_index = 0
+kwarg_names = ["sql"]
+allow_bare_call = true
+
+[[sinks.calls]]
+name = "read_sql_query"
+receivers = ["pandas", "pd"]
+arg_index = 0
+kwarg_names = ["sql"]
+allow_bare_call = true
+
+[[sinks.calls]]
+name = "RawSQL"
+receivers = []
+arg_index = 0
+kwarg_names = ["sql"]
+allow_bare_call = true
+
+[sources]
+enable_builtin_sources = false
+
+[sources.flask]
+attributes = [
+    "request.args",
+    "request.form",
+    "request.values",
+    "request.json",
+    "request.cookies",
+    "request.headers",
+    "request.data"
+]
+calls = [
+    "request.get_json"
+]
+
+[sources.django]
+attributes = [
+    "request.GET",
+    "request.POST",
+    "request.COOKIES",
+    "request.META",
+    "request.body"
+]
+calls = []
+
+[sources.builtins]
+attributes = [
+    "sys.argv",
+    "os.environ"
+]
+calls = [
+    "input"
+]
+
+[sanitizers]
+functions = [
+    "int",
+    "float",
+    "bool",
+    "uuid.UUID",
+    "decimal.Decimal"
+]
+
+[propagators]
+methods = [
+    "format",
+    "join",
+    "strip",
+    "lstrip",
+    "rstrip",
+    "lower",
+    "upper",
+    "replace"
+]
+functions = [
+    "str",
+    "repr"
+]
